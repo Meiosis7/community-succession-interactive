@@ -30,3 +30,13 @@ el('primary').onclick();for(const [i,label]of ['裸岩','地衣','苔藓','草�
 el('climate').value='dry';el('climate').onchange();el('time').value='100';el('time').oninput();assert.equal(el('stage').textContent,'灌木阶段');
 el('mowing').checked=true;el('mowing').onchange();el('time').value='100';el('time').oninput();assert.equal(el('stage').textContent,'草本植物阶段');
 console.log('PASS: 两类演替的阶段名称、阶段跳转、干旱与刈割');
+
+// 教学阶段必须决定观察镜内容，不能复用初生演替的数值阶段。
+el('reset').onclick();el('secondary').onclick();
+assert.ok(el('land-plants').innerHTML.includes('观察镜 · 弃耕农田'),'弃耕农田应显示保留土壤的农田，不能显示苔藓');
+assert.ok(!el('land-plants').innerHTML.split('观察镜 ·')[1].includes('1141 708 395 292'),'弃耕农田观察镜不得使用苔藓素材');
+el('time').value='4';el('time').oninput();
+assert.ok(el('land-plants').innerHTML.includes('观察镜 · 一年生杂草'),'一年生杂草阶段应显示草本素材');
+el('primary').onclick();el('time').value='40';el('time').oninput();
+assert.ok(el('land-plants').innerHTML.includes('观察镜 · 苔藓'),'切回初生演替后应保留苔藓观察镜');
+console.log('PASS: 次生演替观察镜与初生演替分别匹配教学阶段');
