@@ -1,6 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync(__dirname+'/index.html','utf8');
-const elements=new Map();function el(id){if(!elements.has(id))elements.set(id,{id,value:id==='speed'?'1':id==='climate'?'wet':'0',checked:id==='roots',style:{},attrs:{},setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]},classList:{toggle(){}},querySelectorAll(){return[]}});return elements.get(id)}
+const elements=new Map();function el(id){if(!elements.has(id))elements.set(id,{id,open:false,showModal(){this.open=true},close(){this.open=false},value:id==='speed'?'1':id==='climate'?'wet':'0',checked:id==='roots',style:{},attrs:{},setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]},classList:{toggle(){}},querySelectorAll(){return[]}});return elements.get(id)}
 let pending;const ctx={document:{getElementById:el,querySelectorAll(){return[]}},performance:{now:()=>100},requestAnimationFrame(fn){pending=fn;return 1},cancelAnimationFrame(){pending=null}};
 vm.createContext(ctx);for(const match of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g))vm.runInContext(match[1],ctx);
 el('play').onclick();
@@ -40,3 +40,16 @@ assert.ok(el('land-plants').innerHTML.includes('观察镜 · 一年生杂草'),'
 el('primary').onclick();el('time').value='40';el('time').oninput();
 assert.ok(el('land-plants').innerHTML.includes('观察镜 · 苔藓'),'切回初生演替后应保留苔藓观察镜');
 console.log('PASS: 次生演替观察镜与初生演替分别匹配教学阶段');
+
+// Opening settings pauses the simulation without resetting the selected stage.
+el('reset').onclick();el('time').value='40';el('time').oninput();
+el('play').onclick();
+assert.equal(typeof el('open-settings').onclick,'function','观察条件应有弹窗入口');
+el('open-settings').onclick();assert.equal(el('settings-dialog').open,true);
+assert.equal(el('play').textContent,'▶ 开始推演');assert.equal(el('time').value,40);
+el('close-settings').onclick();assert.equal(el('settings-dialog').open,false);
+assert.equal(el('stage').textContent,'苔藓阶段');
+el('time').value='80';el('time').oninput();el('open-settings').onclick();el('fire').onclick();
+assert.equal(el('settings-dialog').open,false,'施加火灾后关闭弹窗，展示恢复动画');
+assert.ok(el('stage').textContent.includes('火灾发生'));
+console.log('PASS: 观察条件弹窗开关、保留进度、暂停及火灾关闭弹窗');
