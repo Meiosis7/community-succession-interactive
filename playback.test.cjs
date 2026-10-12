@@ -15,6 +15,12 @@ el('restart').onclick();assert.equal(el('stage').textContent,'裸岩阶段');
 el('play').onclick();pending(50000);el('play').onclick();assert.equal(el('play').textContent,'▶ 开始推演');
 el('time').value='80';el('time').oninput();const soilBefore=el('soilvalue').innerHTML;
 el('fire').onclick();assert.ok(el('stage').textContent.includes('火灾发生'));assert.equal(el('time').value,80);assert.equal(el('time').max,180);assert.equal(el('soilvalue').innerHTML,soilBefore);assert.equal(el('play').textContent,'Ⅱ 暂停推演');assert.ok(el('land-plants').innerHTML.includes('876 810 365 406'));
+assert.equal(el('secondary').getAttribute('aria-pressed'),'true','火灾后应自动选中次生演替');
+assert.equal(el('primary').getAttribute('aria-pressed'),'false');
+assert.equal(el('typebadge').textContent,'次生演替 · 火灾后恢复');
+assert.ok(el('start-note').textContent.includes('火灾后'));
+assert.ok(!el('start-note').textContent.includes('弃耕'));
+assert.ok(!el('steps').innerHTML.includes('苔藓'),'火灾后的阶段标签应同步到次生演替');
 pending(51000);for(let n=51200;n<90000&&pending;n+=200)pending(n);assert.ok(el('stage').textContent.includes('乔木阶段恢复'));assert.ok(el('time-label').textContent.includes('180'));assert.ok(!el('land-plants').innerHTML.includes('NaN'));
 console.log('PASS: 火灾保持时间、保留土壤、自动继续、延长恢复观察；');
 console.log('PASS: 首帧时钟偏差、完整播放、终点、重播与暂停');
@@ -47,3 +53,25 @@ el('textbook-fold').open=true;el('textbook-fold').ontoggle();
 assert.equal(el('play').textContent,'▶ 开始推演');assert.equal(el('time').value,40);
 el('textbook-fold').open=false;el('textbook-fold').ontoggle();assert.equal(el('stage').textContent,'苔藓阶段');
 console.log('PASS: 展开课本要点暂停并保留当前阶段');
+
+// Moving across the fire event must preserve the original history and resync the controls.
+el('reset').onclick();el('time').value='40';el('time').oninput();const originalSoil=el('soilvalue').innerHTML;
+el('time').value='80';el('time').oninput();el('fire').onclick();
+el('time').value='40';el('time').oninput();
+assert.equal(el('primary').getAttribute('aria-pressed'),'true');
+assert.equal(el('stage').textContent,'苔藓阶段');assert.equal(el('soilvalue').innerHTML,originalSoil);
+el('time').value='85';el('time').oninput();assert.equal(el('secondary').getAttribute('aria-pressed'),'true');
+el('restart').onclick();assert.equal(el('primary').getAttribute('aria-pressed'),'true');assert.equal(el('time').value,0);
+el('secondary').onclick();el('time').value='80';el('time').oninput();el('fire').onclick();
+assert.equal(el('secondary').getAttribute('aria-pressed'),'true');assert.ok(el('start-note').textContent.includes('火灾后'));
+el('primary').onclick();assert.equal(el('stage').textContent,'裸岩阶段');assert.equal(el('time').max,100);
+console.log('PASS: 火灾自动切换次生演替，时间回看、重播和手动切换同步');
+
+el('time').value='80';el('time').oninput();el('fire').onclick();
+for(const [elapsed,label] of [[4,'一年生草本阶段'],[18,'多年生草本阶段'],[35,'灌木阶段'],[75,'乔木阶段']]){
+ el('time').value=String(80+elapsed);el('time').oninput();
+ assert.equal(el('reason-title').textContent,'次生演替：'+label,'火灾恢复标题应显示具体阶段');
+ if(elapsed>=7)assert.ok(el('stage').textContent.includes(label));
+}
+el('primary').onclick();assert.equal(el('reason-title').textContent,'初生演替：裸岩阶段');
+console.log('PASS: 当前阶段使用具体名称，并随火灾后的次生演替更新');
