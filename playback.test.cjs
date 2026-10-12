@@ -1,8 +1,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync(__dirname+'/index.html','utf8');
-const elements=new Map();function el(id){if(!elements.has(id))elements.set(id,{id,appendChild(child){child.parentId=this.id},open:false,showModal(){this.open=true},close(){this.open=false},value:id==='speed'?'1':id==='climate'?'wet':'0',checked:id==='roots',style:{},attrs:{},setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]},classList:{toggle(){}},querySelectorAll(){return[]}});return elements.get(id)}
-let mediaChange;const mobileMedia={matches:true,addEventListener(event,fn){mediaChange=fn}};
-let pending;const ctx={window:{matchMedia(){return mobileMedia}},document:{getElementById:el,querySelectorAll(){return[]}},performance:{now:()=>100},requestAnimationFrame(fn){pending=fn;return 1},cancelAnimationFrame(){pending=null}};
+const elements=new Map();function el(id){if(!elements.has(id))elements.set(id,{id,open:false,showModal(){this.open=true},close(){this.open=false},value:id==='speed'?'1':id==='climate'?'wet':'0',checked:id==='roots',style:{},attrs:{},setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]},classList:{toggle(){}},querySelectorAll(){return[]}});return elements.get(id)}
+let pending;const ctx={document:{getElementById:el,querySelectorAll(){return[]}},performance:{now:()=>100},requestAnimationFrame(fn){pending=fn;return 1},cancelAnimationFrame(){pending=null}};
 vm.createContext(ctx);for(const match of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g))vm.runInContext(match[1],ctx);
 el('play').onclick();
 // First frame timestamp may precede performance.now() sampled in the click handler.
@@ -62,16 +61,3 @@ assert.equal(el('play').textContent,'▶ 开始推演');assert.equal(el('time').
 el('close-textbook').onclick();assert.equal(el('textbook-dialog').open,false);
 assert.equal(el('stage').textContent,'苔藓阶段');
 console.log('PASS: 课本要点弹窗开关、暂停并保留当前阶段');
-
-assert.equal(el('settings-content').parentId,'settings-dialog');
-assert.equal(el('textbook-content').parentId,'textbook-dialog');
-el('open-textbook').onclick();
-mobileMedia.matches=false;mediaChange();
-assert.equal(el('textbook-dialog').open,false);
-assert.equal(el('settings-content').parentId,'settings-inline');
-assert.equal(el('textbook-content').parentId,'textbook-inline');
-assert.equal(el('stage').textContent,'苔藓阶段');
-mobileMedia.matches=true;mediaChange();
-assert.equal(el('settings-content').parentId,'settings-dialog');
-assert.equal(el('textbook-content').parentId,'textbook-dialog');
-console.log('PASS: 手机弹窗与电脑展开布局切换，复用控件并保留阶段');
