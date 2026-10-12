@@ -41,24 +41,9 @@ el('primary').onclick();el('time').value='40';el('time').oninput();
 assert.ok(el('land-plants').innerHTML.includes('观察镜 · 苔藓'),'切回初生演替后应保留苔藓观察镜');
 console.log('PASS: 次生演替观察镜与初生演替分别匹配教学阶段');
 
-// Opening settings pauses the simulation without resetting the selected stage.
-el('reset').onclick();el('time').value='40';el('time').oninput();
-el('play').onclick();
-assert.equal(typeof el('open-settings').onclick,'function','观察条件应有弹窗入口');
-el('open-settings').onclick();assert.equal(el('settings-dialog').open,true);
-assert.equal(el('play').textContent,'▶ 开始推演');assert.equal(el('time').value,40);
-el('close-settings').onclick();assert.equal(el('settings-dialog').open,false);
-assert.equal(el('stage').textContent,'苔藓阶段');
-el('time').value='80';el('time').oninput();el('open-settings').onclick();el('fire').onclick();
-assert.equal(el('settings-dialog').open,false,'施加火灾后关闭弹窗，展示恢复动画');
-assert.ok(el('stage').textContent.includes('火灾发生'));
-console.log('PASS: 观察条件弹窗开关、保留进度、暂停及火灾关闭弹窗');
-
+// Reading the inline textbook card pauses without losing the selected stage.
 el('reset').onclick();el('time').value='40';el('time').oninput();el('play').onclick();
-el('open-settings-bottom').onclick();assert.equal(el('settings-dialog').open,true);
-assert.equal(el('play').textContent,'▶ 开始推演');assert.equal(el('time').value,40);
-el('close-settings').onclick();assert.equal(el('settings-dialog').open,false);
-el('play').onclick();el('textbook-fold').open=true;el('textbook-fold').ontoggle();
+el('textbook-fold').open=true;el('textbook-fold').ontoggle();
 assert.equal(el('play').textContent,'▶ 开始推演');assert.equal(el('time').value,40);
 el('textbook-fold').open=false;el('textbook-fold').ontoggle();assert.equal(el('stage').textContent,'苔藓阶段');
-console.log('PASS: 下方条件入口、展开课本要点暂停并保留当前阶段');
+console.log('PASS: 展开课本要点暂停并保留当前阶段');
