@@ -53,3 +53,11 @@ el('time').value='80';el('time').oninput();el('open-settings').onclick();el('fir
 assert.equal(el('settings-dialog').open,false,'施加火灾后关闭弹窗，展示恢复动画');
 assert.ok(el('stage').textContent.includes('火灾发生'));
 console.log('PASS: 观察条件弹窗开关、保留进度、暂停及火灾关闭弹窗');
+
+el('reset').onclick();el('time').value='40';el('time').oninput();el('play').onclick();
+assert.equal(typeof el('open-textbook').onclick,'function','课本要点应有按钮弹窗入口');
+el('open-textbook').onclick();assert.equal(el('textbook-dialog').open,true);
+assert.equal(el('play').textContent,'▶ 开始推演');assert.equal(el('time').value,40);
+el('close-textbook').onclick();assert.equal(el('textbook-dialog').open,false);
+assert.equal(el('stage').textContent,'苔藓阶段');
+console.log('PASS: 课本要点弹窗开关、暂停并保留当前阶段');
