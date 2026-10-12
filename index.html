@@ -190,11 +190,70 @@ body:has(.settings-modal[open]){overflow:hidden}
  .textbook-modal .type-compare>div+div{padding:9px 0 0;border-left:0;border-top:1px dashed #b5bea3}
 }
 
+/* Visible desktop reference panels; guided touch entries on phones. */
+.learning-tools{display:none}
+.inline-settings,.inline-textbook{min-width:0}
+.settings-modal .settings>h2,.settings-modal .textbook>h2{display:none}
+.stage-guide{display:flex;align-items:center;justify-content:space-between;padding:0 3px 8px;gap:8px}
+.stage-guide b{font-size:13px}
+.stage-guide span{font-size:11px;color:#67755b}
+@media(min-width:701px){
+ .inline-settings .settings{margin-top:12px}
+ .inline-textbook .textbook{margin-top:12px}
+ .scenehead{min-height:45px}
+}
+@media(max-width:700px){
+ main{padding:10px 12px 14px}
+ h1{font-size:25px;padding:4px 11px 6px;margin-bottom:9px}
+ .intro{font-size:12px;line-height:1.6}
+ .learning-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+ .learning-tools #open-settings,.learning-tools #open-textbook{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:2px solid #344735;border-radius:9px 13px 8px 11px;box-shadow:2px 3px 0 #344735;background:#f4d97f;padding:9px 10px;min-height:56px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+ .learning-tools #open-settings{background:#f4d97f}.learning-tools #open-textbook{background:#e4eccf}
+ .learning-tools button:hover{transform:translateY(-1px)}
+ .learning-tools button:active{transform:translate(2px,2px);box-shadow:none}
+ .learning-tools button:focus-visible{outline:3px solid #bd772d;outline-offset:4px}
+ .tool-symbol{display:grid;place-items:center;width:31px;height:31px;flex-shrink:0;background:#fffbea;border:1px solid #667451;border-radius:50%;font-size:20px;line-height:1}
+ .tool-copy{display:grid;gap:3px;flex:1}
+ .tool-copy strong{font-size:14px;line-height:1.35}
+ .tool-copy small{display:flex;justify-content:space-between;font-size:11px;line-height:1.35;color:#46583d}
+ .tool-copy small span{font-size:14px;line-height:1}
+ .workspace{margin-top:12px;gap:11px}
+ .inline-settings,.inline-textbook{display:none}
+ .scenehead{padding:8px 10px;gap:8px}
+ .scenehead h2{font-size:13px}
+ .scenehead .badge{font-size:10px;padding:3px 6px}
+ .scene svg{aspect-ratio:900/400}
+ .transport{padding:8px 9px 9px}
+ .controls button,.controls .speed{min-height:36px;font-size:11px}
+ .controls>label{min-height:36px}
+ .stage-guide{padding:0 2px 7px}
+ .stage-guide b{font-size:12px}
+ .stage-guide span{font-size:10px}
+ .stage-card .steps button{min-height:43px}
+ .stage-card .mechanism{padding:10px}
+ .compact-note{font-size:9px;margin-top:9px}
+ .settings-modal{width:calc(100% - 28px);max-height:88dvh;border-radius:13px}
+ .dialoghead{position:sticky;top:0;z-index:2;padding:11px 13px}
+}
+@media(max-width:360px){
+ main{padding:9px 10px 12px}
+ h1{font-size:23px}
+ .learning-tools{gap:8px}
+ .learning-tools #open-settings,.learning-tools #open-textbook{padding:8px;gap:7px;min-height:52px}
+ .tool-symbol{width:27px;height:27px;font-size:18px}
+ .tool-copy strong{font-size:13px}
+ .tool-copy small{font-size:10px}
+ .controls>div{gap:3px}
+ .controls button{padding-inline:4px}
+ .controls .speed{padding-inline:1px}
+ .scenehead .badge{font-size:9px}
+}
+
 </style></head><body><header><div class="topbar"><div class="brand">一生儿 <span>《高中生物一本通》</span></div><small>选择性必修 2 · 生物与环境</small></div></header><main><h1>群落的演替</h1><p class="intro">随着时间的推移，一个群落被另一个群落代替的过程，叫作群落演替。</p>
-<section id="lab" aria-label="群落的演替"><div class="workspace"><div><section class="panel"><div class="scenehead"><h2>演替过程</h2><span class="badge" id="typebadge">初生演替 · 裸岩起点</span><div class="scene-tools"><button id="open-settings" type="button" aria-haspopup="dialog" aria-controls="settings-dialog">观察条件</button><button id="open-textbook" type="button" aria-haspopup="dialog" aria-controls="textbook-dialog">课本要点</button></div></div><div class="scene"><svg id="land" role="img" aria-label="群落演替场景"></svg><div class="stage-label"><b id="stage">裸岩阶段</b><small id="stage-sub">尚无土壤，等待先锋生物定居</small></div></div><div class="stats" hidden><div class="stat"><label>土壤发育程度</label><strong id="soilvalue"></strong><div class="track"><i id="soilbar"></i></div></div><div class="stat"><label>近地表相对光照</label><strong id="lightvalue"></strong><div class="track"><i id="lightbar"></i></div></div><div class="stat"><label>群落垂直结构</label><strong id="layers"></strong><div class="track"><i id="layerbar"></i></div></div></div><div class="transport"><div class="timehead"><strong id="time-label">演替时间 0 / 100</strong><span>相对时间单位，非实际年数</span></div><input id="time" class="timeline" type="range" min="0" max="100" step="0.1" value="0" aria-label="演替时间"><div class="controls"><div><button class="primary" id="play">▶ 开始推演</button><button id="restart">从头观察</button><select class="speed" id="speed" aria-label="播放速度"><option value="1">1 倍速</option><option value="2">2 倍速</option><option value="4">4 倍速</option></select></div><label style="font-size:12px;color:var(--muted)"><input type="checkbox" id="roots" checked> 显示土壤剖面</label></div></div></section><div class="notice" hidden><strong>演替是“优势的替代”，不一定是“完全的取代”。</strong> 后期群落仍可保留地衣、苔藓、草本等类群；画面与右侧覆盖度会同时展示它们。</div></div><aside class="sidebar"><section class="stage-card" aria-label="演替阶段"><div class="steps" id="steps" aria-label="选择演替阶段"></div><div class="mechanism" aria-live="polite"><small>当前阶段</small><h3 id="reason-title"></h3><p id="reason"></p><div class="stage-facts" id="stage-facts"></div></div></section><section class="panel bars" hidden><h2>主要类群的覆盖度</h2><p class="hint">各层独立估算，允许重叠，不相加为 100%。</p><div id="covers"></div></section></aside></div></section>
+<section id="lab" aria-label="群落的演替"><nav class="learning-tools" aria-label="学习工具"><button id="open-settings" type="button" aria-haspopup="dialog" aria-controls="settings-dialog"><span class="tool-symbol" aria-hidden="true">⚙</span><span class="tool-copy"><strong>观察条件</strong><small>点击设置 <span aria-hidden="true">↗</span></small></span></button><button id="open-textbook" type="button" aria-haspopup="dialog" aria-controls="textbook-dialog"><span class="tool-symbol" aria-hidden="true">▤</span><span class="tool-copy"><strong>课本要点</strong><small>点击查看 <span aria-hidden="true">↗</span></small></span></button></nav><div class="workspace"><div><section class="panel"><div class="scenehead"><h2>演替过程</h2><span class="badge" id="typebadge">初生演替 · 裸岩起点</span></div><div class="scene"><svg id="land" role="img" aria-label="群落演替场景"></svg><div class="stage-label"><b id="stage">裸岩阶段</b><small id="stage-sub">尚无土壤，等待先锋生物定居</small></div></div><div class="stats" hidden><div class="stat"><label>土壤发育程度</label><strong id="soilvalue"></strong><div class="track"><i id="soilbar"></i></div></div><div class="stat"><label>近地表相对光照</label><strong id="lightvalue"></strong><div class="track"><i id="lightbar"></i></div></div><div class="stat"><label>群落垂直结构</label><strong id="layers"></strong><div class="track"><i id="layerbar"></i></div></div></div><div class="transport"><div class="timehead"><strong id="time-label">演替时间 0 / 100</strong><span>相对时间单位，非实际年数</span></div><input id="time" class="timeline" type="range" min="0" max="100" step="0.1" value="0" aria-label="演替时间"><div class="controls"><div><button class="primary" id="play">▶ 开始推演</button><button id="restart">从头观察</button><select class="speed" id="speed" aria-label="播放速度"><option value="1">1 倍速</option><option value="2">2 倍速</option><option value="4">4 倍速</option></select></div><label style="font-size:12px;color:var(--muted)"><input type="checkbox" id="roots" checked> 显示土壤剖面</label></div></div></section><div id="settings-inline" class="inline-settings"></div><div class="notice" hidden><strong>演替是“优势的替代”，不一定是“完全的取代”。</strong> 后期群落仍可保留地衣、苔藓、草本等类群；画面与右侧覆盖度会同时展示它们。</div></div><aside class="sidebar"><section class="stage-card" aria-label="演替阶段"><div class="stage-guide"><b>演替阶段</b><span>点击标签，查看各阶段</span></div><div class="steps" id="steps" aria-label="选择演替阶段"></div><div class="mechanism" aria-live="polite"><small>当前阶段</small><h3 id="reason-title"></h3><p id="reason"></p><div class="stage-facts" id="stage-facts"></div></div></section><section class="panel bars" hidden><h2>主要类群的覆盖度</h2><p class="hint">各层独立估算，允许重叠，不相加为 100%。</p><div id="covers"></div></section><div id="textbook-inline" class="inline-textbook"></div></aside></div></section>
 <section id="comparison" role="tabpanel" aria-labelledby="tab-compare" hidden><div class="compare"><article class="panel"><div class="scenehead"><h2>初生演替</h2><span class="badge">无土壤基础</span></div><div class="scene"><svg id="compare-p" aria-label="初生演替比较场景" role="img"></svg></div><div class="summary" id="cp-text"></div></article><article class="panel"><div class="scenehead"><h2>次生演替</h2><span class="badge">保留土壤基础</span></div><div class="scene"><svg id="compare-s" aria-label="次生演替比较场景" role="img"></svg></div><div class="summary" id="cs-text"></div></article></div><div class="panel compare-control"><div class="timehead"><strong id="compare-label">同一相对时间：30</strong><span>相同湿润条件，无持续干扰</span></div><input class="timeline" id="compare-time" type="range" min="0" max="100" value="30" aria-label="比较两类演替的时间"><p>拖动同一时间轴，观察“起点不同”带来的速度差异。次生演替可利用原有土壤，以及可能残留的种子、地下器官等条件，通常比初生演替快。</p></div></section>
 <section id="learn" role="tabpanel" aria-labelledby="tab-learn" hidden><div class="learning"><article class="panel learnhead"><div class="eyebrow">群落演替 · 核心知识</div><h2>为什么群落会发生更替？</h2><p>随着时间的推移，一个群落被另一个群落代替的过程，就是群落的演替。不同阶段的优势类群发生改变，生物与环境的相互作用贯穿整个过程。</p></article><div class="cards"><article class="panel card"><span class="number">01</span><h3>生物改变环境</h3><p>以裸岩上的演替为例，地衣等先锋生物可促进岩石风化；生物残体分解增加有机质，为后来的生物创造定居条件。</p></article><article class="panel card"><span class="number">02</span><h3>竞争改变优势</h3><p>草本、灌木和乔木陆续建立。较高植物对光的竞争优势增强，近地表光照降低，耐阴类群可能保留下来。</p></article><article class="panel card"><span class="number">03</span><h3>环境制约方向</h3><p>水分、温度、土壤与物种来源等共同影响演替。人类活动可改变演替的方向和速度，森林并非所有环境的共同终点。</p></article></div><div class="panel tablewrap"><table><thead><tr><th>比较维度</th><th>初生演替</th><th>次生演替</th></tr></thead><tbody><tr><td>起始条件</td><td>原先从未有过植被，或原有植被被彻底消灭的地方</td><td>原有植被虽已不存在，但土壤基本保留</td></tr><tr><td>可利用基础</td><td>缺少原有土壤或生物留下的恢复基础</td><td>可能保留种子、地下器官等</td></tr><tr><td>典型情境</td><td>裸岩、冰川退去后裸露的地面</td><td>弃耕农田、土壤保留的火灾后林地</td></tr><tr><td>一般速度</td><td>较慢</td><td>较快，仍受环境与干扰强度影响</td></tr></tbody></table></div><article class="panel quiz"><div class="eyebrow">概念辨析</div><h3>森林遭遇火灾，地上植被受损，但土壤基本保留。此后的恢复属于什么？</h3><div class="choices" data-quiz="0"><button data-answer="0">初生演替</button><button data-answer="1">次生演替</button><button data-answer="2">只看是否出现地衣</button></div><p class="feedback" id="feedback-0" aria-live="polite">根据起始条件判断，而不是仅凭发生了火灾。</p></article><article class="panel quiz"><div class="eyebrow">知识应用</div><h3>在干旱地区，延长观察时间，群落是否一定发展成森林？</h3><div class="choices" data-quiz="1"><button data-answer="0">一定，森林是唯一终点</button><button data-answer="1">不一定，受环境条件制约</button></div><p class="feedback" id="feedback-1" aria-live="polite">回到推演，切换水分条件并拖到后期。</p></article><article class="panel quiz"><div class="eyebrow">读图分析</div><h3>森林阶段仍然出现草本和苔藓，说明什么？</h3><div class="choices" data-quiz="2"><button data-answer="0">演替尚未发生</button><button data-answer="1">优势类群替代不等于完全取代</button></div><p class="feedback" id="feedback-2" aria-live="polite">观察主要类群覆盖度，区分“存在”与“占优势”。</p></article></div></section>
-<p class="compact-note">人教版《选择性必修2 生物与环境》· 第2章第3节。时间为相对单位，画面为教学示意，不对应实际年数。</p><footer><span>一生儿《高中生物一本通》· 生物学交互模型</span><span>群落的演替 · 教学示意</span></footer></main><dialog id="textbook-dialog" class="settings-modal textbook-modal" aria-labelledby="textbook-title"><div class="dialoghead"><h2 id="textbook-title">课本要点</h2><button id="close-textbook" type="button">完成</button></div><section class="panel textbook"><div class="type-compare"><div><h3>初生演替</h3><p>从未被植物覆盖，或原有植被被彻底消灭的地方。</p><p class="sequence">裸岩 → 地衣 → 苔藓 → 草本 → 灌木 → 乔木</p></div><div><h3>次生演替</h3><p>原有土壤基本保留，甚至留有种子或其他繁殖体，通常恢复较快。</p><p class="sequence">弃耕农田 → 一年生杂草 → 多年生杂草 → 灌木 → 乔木</p></div></div><ul><li><strong>优势替代：</strong>原有类群不一定全部消失。</li><li><strong>环境制约：</strong>演替不一定发展到森林。</li><li><strong>人类活动：</strong>可改变演替的方向和速度。</li></ul></section></dialog><dialog id="settings-dialog" class="settings-modal" aria-labelledby="settings-title"><div class="dialoghead"><h2 id="settings-title">观察条件</h2><button id="close-settings" type="button">完成</button></div><section class="panel settings"><div class="field"><div class="fieldhead">初始条件</div><div class="seg"><button id="primary" aria-pressed="true">初生演替</button><button id="secondary" aria-pressed="false">次生演替</button></div><p class="hint" id="start-note">裸岩起点：无土壤，原先不存在植被。</p></div><div class="field"><label class="fieldhead" for="climate">水分条件</label><select id="climate"><option value="wet">温暖湿润 · 可形成森林</option><option value="dry">干旱少雨 · 以草灌为主</option></select></div><label class="check" hidden><input type="checkbox" id="mowing">持续刈割：抑制木本建立</label><div class="disturbance"><div class="fieldhead">干扰与恢复</div><button id="fire" class="full disturb">火灾 · 保留土壤后恢复</button><p class="hint" id="fire-note" aria-live="polite">草本及以后可施加火灾。</p><button id="reset" class="full">恢复默认条件</button></div></section></dialog>
+<p class="compact-note">人教版《选择性必修2 生物与环境》· 第2章第3节。时间为相对单位，画面为教学示意，不对应实际年数。</p><footer><span>一生儿《高中生物一本通》· 生物学交互模型</span><span>群落的演替 · 教学示意</span></footer></main><dialog id="textbook-dialog" class="settings-modal textbook-modal" aria-labelledby="textbook-title"><div class="dialoghead"><h2 id="textbook-title">课本要点</h2><button id="close-textbook" type="button">完成</button></div><section id="textbook-content" class="panel textbook"><h2>课本要点</h2><div class="type-compare"><div><h3>初生演替</h3><p>从未被植物覆盖，或原有植被被彻底消灭的地方。</p><p class="sequence">裸岩 → 地衣 → 苔藓 → 草本 → 灌木 → 乔木</p></div><div><h3>次生演替</h3><p>原有土壤基本保留，甚至留有种子或其他繁殖体，通常恢复较快。</p><p class="sequence">弃耕农田 → 一年生杂草 → 多年生杂草 → 灌木 → 乔木</p></div></div><ul><li><strong>优势替代：</strong>原有类群不一定全部消失。</li><li><strong>环境制约：</strong>演替不一定发展到森林。</li><li><strong>人类活动：</strong>可改变演替的方向和速度。</li></ul></section></dialog><dialog id="settings-dialog" class="settings-modal" aria-labelledby="settings-title"><div class="dialoghead"><h2 id="settings-title">观察条件</h2><button id="close-settings" type="button">完成</button></div><section id="settings-content" class="panel settings"><h2>观察条件</h2><div class="field"><div class="fieldhead">初始条件</div><div class="seg"><button id="primary" aria-pressed="true">初生演替</button><button id="secondary" aria-pressed="false">次生演替</button></div><p class="hint" id="start-note">裸岩起点：无土壤，原先不存在植被。</p></div><div class="field"><label class="fieldhead" for="climate">水分条件</label><select id="climate"><option value="wet">温暖湿润 · 可形成森林</option><option value="dry">干旱少雨 · 以草灌为主</option></select></div><label class="check" hidden><input type="checkbox" id="mowing">持续刈割：抑制木本建立</label><div class="disturbance"><div class="fieldhead">干扰与恢复</div><button id="fire" class="full disturb">火灾 · 保留土壤后恢复</button><p class="hint" id="fire-note" aria-live="polite">草本及以后可施加火灾。</p><button id="reset" class="full">恢复默认条件</button></div></section></dialog>
 <script id="model">
 const Succession={
  state(t,type='primary',climate='wet',mowing=false,soilFloor=0){
@@ -305,6 +364,17 @@ function tick(now){if(!running)return;time=Math.min(endTime(),time+(last===null?
 function comparison(){const t=+$('compare-time').value;$('compare-label').textContent='同一相对时间：'+t;for(const [id,tp,txt]of [['compare-p','primary','cp-text'],['compare-s','secondary','cs-text']]){const s=Succession.state(t,tp);scene($(id),s);$(txt).innerHTML=`当前：<strong>${teaching(s,tp,t).label}</strong> · 土壤发育指数 ${Math.round(s.soil)} / 100<br>${tp==='primary'?'先形成生物定居与土壤发育的基础，通常经历较长过程。':'利用保留的土壤基础，植被可更快恢复。'}`;}}
 $('open-settings').onclick=()=>{stop();$('settings-dialog').showModal()};$('close-settings').onclick=()=>{$('settings-dialog').close()};
 $('open-textbook').onclick=()=>{stop();$('textbook-dialog').showModal()};$('close-textbook').onclick=()=>{$('textbook-dialog').close()};
+
+const mobileLayout=window.matchMedia('(max-width:700px)');
+function arrangeLearningPanels(){
+  for(const name of ['settings','textbook']){
+    const dialog=$(name+'-dialog');
+    if(dialog.open)dialog.close();
+    (mobileLayout.matches?dialog:$(name+'-inline')).appendChild($(name+'-content'));
+  }
+}
+mobileLayout.addEventListener('change',arrangeLearningPanels);
+arrangeLearningPanels();
 $('compare-time').oninput=comparison;document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{stop();document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-selected',x===b));for(const id of ['lab','comparison','learn'])$(id).hidden=id!==b.dataset.tab;if(b.dataset.tab==='comparison')comparison()});
 const feedback=['判断正确。土壤基本保留是本情境的关键，火灾后的恢复属于次生演替。','判断正确。演替受水分等条件制约，干旱条件下可形成草原或灌丛，未必形成森林。','判断正确。群落演替改变优势类群与群落结构，原有类群不一定全部消失。'];document.querySelectorAll('[data-quiz]').forEach(q=>q.onclick=e=>{const b=e.target.closest('button');if(!b)return;const correct=b.dataset.answer==='1';q.querySelectorAll('button').forEach(x=>x.className='');b.className=correct?'correct':'wrong';$('feedback-'+q.dataset.quiz).textContent=correct?feedback[+q.dataset.quiz]:'再想一想：'+['区分两类演替，要看原有土壤与恢复基础是否保留。','生物生长需要适宜条件，时间不能替代水分。','请比较“成为优势类群”和“所有旧类群消失”。'][+q.dataset.quiz]});setSteps();update();comparison();
 })();
